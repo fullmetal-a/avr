@@ -25,7 +25,7 @@ You must have C++ compiler (e.g. GCC), Qt framefork (5.0 version or higher), git
 
 ### Windows
 The simplest way to compile it is open project in Qt Creator.  
-You also must have Git, Qt framework  (5.0 version or higher) any compiler on your computer (e.g. MSVC or Mingw32).  
+You also must have Git, Qt framework  (5.0 version or higher) and any compiler on your computer (e.g. MSVC or Mingw32).  
 
 1. Open git bash emulator and create a directory, for example: `$ mkdir D:/projects/avr`
 2. Go to your new directoty: `$ cd D:/projects/avr`

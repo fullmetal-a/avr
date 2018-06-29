@@ -5,7 +5,7 @@
 
 namespace AVR
 {
-    enum MessageType    //All possible messages
+    enum class MessageType    //All possible messages
     {
         Unknown,
         MoveForNSteps,

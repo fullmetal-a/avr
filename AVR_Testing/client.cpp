@@ -77,9 +77,9 @@ namespace AVR
     {
         QString FullMessage;
         if (msg == MessageType::MoveForNSteps)          //Write step quantity into message string
-            FullMessage.sprintf("%i:%i", msg, steps);   //if going to send MoveForNSteps message
+            FullMessage.sprintf("%i:%i", int(msg), steps);   //if going to send MoveForNSteps message
         else
-            FullMessage.sprintf("%i", msg);   //Otherwise just write the message code.
+            FullMessage.sprintf("%i", int(msg));   //Otherwise just write the message code.
 
         //Preparing message for sending through socket
         QByteArray arrBlock;
