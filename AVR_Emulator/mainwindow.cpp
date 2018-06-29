@@ -11,6 +11,7 @@ MainWindow::MainWindow(const QHostAddress& host, int iPort, int chanceToLie, int
     //Registering our types for Qt signals
     qRegisterMetaType<AVR::Message>("AVR::Message");
     qRegisterMetaType<AVR::Message::Type>("Message::Type");
+    qRegisterMetaType<AVR::AVRSystem::Exeption>("AVRSystem::Exeption");
     //Creating AVR System unit
     avr = new AVR::AVRSystem(chanceToLie, maxPos);  //Passing chance to lie and maximum position values
     try
