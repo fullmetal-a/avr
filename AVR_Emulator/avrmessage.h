@@ -6,7 +6,7 @@ namespace AVR
                     //All incoming messages from client to AVR system must be translated to AVR::Message.
     {
     public:
-        enum Type    //All possible messages
+        enum class Type    //All possible messages
         {
             Unknown,
             MoveForNSteps,

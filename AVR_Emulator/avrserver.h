@@ -16,7 +16,7 @@ namespace AVR
         Q_OBJECT
 
     private:
-        QTcpServer* m_ptcpServer;   //The server instance.
+        QTcpServer m_ptcpServer;   //The server instance.
         quint16 m_nNextBlockSize;   //Data block size (needed for internal server work)
         QTcpSocket* m_theOnlyClient;    //Current only client. This is socket linked to connected client if it exists.
         bool m_bHasClient;  //State of server. Does it have client or not.
@@ -30,18 +30,13 @@ namespace AVR
         Server(const QHostAddress& host, int nPort, QObject* pwgt =0);
         ~Server();
 
-        enum Exeption   //Server's exeptions
-        {
-            ListenFailed
-        };
-
     public slots:
         void slotNewConnection();   //Slot of new incoming connection. Triggers when someone connects.
         void OnClientDisconnected();        //Triggers when client has been disconnected.
         void slotReadClient();              //Retrieving data from client
 
         void AVRWorkIsComplete();           //Triggers when AVR finished moving
-        void OnAVRError(AVRSystem::Exeption code);          //Triggers when AVR error occurred
+        void OnAVRError(AVRSystem::Error code);          //Triggers when AVR error occurred
         void SendPosition(int pos);         //Sends current AVR position to client
         void OnMessageReceived(Message::Type type, int ReceivedSteps);  //Triggers when AVR system recieved message.
         void OnClientInit(int currentPos, int maxPos);  //Triggers when AVR system says to

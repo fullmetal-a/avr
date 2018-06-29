@@ -14,13 +14,13 @@ namespace AVR
         Q_OBJECT
 
     public:
-        enum State  //State of AVR system. It can idle or be in movement.
+        enum class State  //State of AVR system. It can idle or be in movement.
         {
             Idle,
             Moving
         };
 
-        enum Exeption   //Exepting situation codes for AVR System
+        enum class Error   //Exepting situation codes for AVR System
         {
             UnknownMessage,
             ValueIsLowerThanZero,
@@ -63,7 +63,7 @@ namespace AVR
     signals:
         void WorkIsComplete();        //Says to server when moving was complete.
         void SendPosition(int pos);   //Says to server current position (calls GetCurrentPos() method)
-        void ErrorOccurred(AVRSystem::Exeption code); //Says to server when error occured in AVR System.
+        void ErrorOccurred(AVRSystem::Error code); //Says to server when error occured in AVR System.
         void UpdateDisplay(int pos);  //Asks UI to update position value
         void MessageReceived(Message::Type type, int ReceivedSteps = 0);    //Reports server that messsage from client was received (What message and how much steps).
         void ClientInit(int currentPos, int maxPos);    //Sends server information for initializing client.

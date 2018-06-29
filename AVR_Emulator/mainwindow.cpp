@@ -11,20 +11,17 @@ MainWindow::MainWindow(const QHostAddress& host, int iPort, int chanceToLie, int
     //Registering our types for Qt signals
     qRegisterMetaType<AVR::Message>("AVR::Message");
     qRegisterMetaType<AVR::Message::Type>("Message::Type");
-    qRegisterMetaType<AVR::AVRSystem::Exeption>("AVRSystem::Exeption");
+    qRegisterMetaType<AVR::AVRSystem::Error>("AVRSystem::Error");
     //Creating AVR System unit
     avr = new AVR::AVRSystem(chanceToLie, maxPos);  //Passing chance to lie and maximum position values
     try
     {
         server = new AVR::Server(host, iPort); //Trying to create and host AVR server entity
     }
-    catch(AVR::Server::Exeption svExeption) //If server init failed
+    catch(...) //If server init failed
     {
-        if(svExeption == AVR::Server::Exeption::ListenFailed)
-        {
-            this->close();  //Exiting from applicationg.
-            exit(0);
-        }
+        this->close();  //Exiting from applicationg.
+        exit(0);
     }
     QString sHost, sPort;   //String variables for host and port
     sHost = host.toString();
@@ -37,13 +34,13 @@ MainWindow::MainWindow(const QHostAddress& host, int iPort, int chanceToLie, int
 
     //Connecting all slots and events of AVR System and Server
     QObject::connect(&backgroundThread, &QThread::finished, avr, &QObject::deleteLater);
-    QObject::connect(server, &AVR::Server::AVRMessage, avr, &AVR::AVRSystem::AVRSystem::ParseMsg, Qt::QueuedConnection);
+    QObject::connect(server, &AVR::Server::AVRMessage, avr, &AVR::AVRSystem::AVRSystem::ParseMsg, Qt::QueuedConnection);    //To organize queue of incoming messages in AVRSystem owned thread.
     QObject::connect(server, &AVR::Server::ChangeConnectionLabel, this, &MainWindow::ChangeConnectionLabelToValue);
-    QObject::connect(avr, &AVR::AVRSystem::WorkIsComplete, server, &AVR::Server::AVRWorkIsComplete, Qt::QueuedConnection);
-    QObject::connect(avr, &AVR::AVRSystem::SendPosition, server, &AVR::Server::SendPosition, Qt::QueuedConnection);
+    QObject::connect(avr, &AVR::AVRSystem::WorkIsComplete, server, &AVR::Server::AVRWorkIsComplete);
+    QObject::connect(avr, &AVR::AVRSystem::SendPosition, server, &AVR::Server::SendPosition);
     QObject::connect(avr, &AVR::AVRSystem::ErrorOccurred, server, &AVR::Server::OnAVRError);
     QObject::connect(avr, &AVR::AVRSystem::MessageReceived, server, &AVR::Server::OnMessageReceived);
-    QObject::connect(avr, &AVR::AVRSystem::UpdateDisplay, this, &MainWindow::OnUpdateAVRDisplay, Qt::QueuedConnection);
+    QObject::connect(avr, &AVR::AVRSystem::UpdateDisplay, this, &MainWindow::OnUpdateAVRDisplay);
     QObject::connect(avr, &AVR::AVRSystem::ClientInit, server, &AVR::Server::OnClientInit);
     QObject::connect(server, &AVR::Server::AskForClientInit, avr, &AVR::AVRSystem::OnClientInitRequest);
 

@@ -1,5 +1,6 @@
 #include "avrserver.h"
 #include <QMessageBox>
+#include <stdexcept>
 
 /*
     Server messages for it's client always must contain special token at the begining.
@@ -51,22 +52,21 @@
 */
 
 AVR::Server::Server(const QHostAddress& host, int nPort, QObject* pwgt /*=0*/) : QObject(pwgt)
-, m_nNextBlockSize(0)
+    ,m_ptcpServer(this)
 {
-    m_ptcpServer = new QTcpServer(this);    //Create new server instance
-    if (!m_ptcpServer->listen(host, nPort)) //Starting listening port for certain host
+    if (!m_ptcpServer.listen(host, nPort)) //Starting listening port for certain host
     {
         //Well, server listen has been failed...
         //Show error message and stop the server
-        QMessageBox::critical(0,"Server Error","Unable to start the server: " + m_ptcpServer->errorString());
-        m_ptcpServer->close();
-        throw Exeption::ListenFailed;   //Throw an exeption, server listen has been failed
-        return;   //Interrupt server init
+        QMessageBox::critical(0,"Server Error","Unable to start the server: " + m_ptcpServer.errorString());
+        m_ptcpServer.close();
+        throw std::runtime_error("Server listen failed.");
     }
     //Connect new connection signal with server's slot
-    QObject::connect(m_ptcpServer, &QTcpServer::newConnection, this, &Server::slotNewConnection);
+    QObject::connect(&m_ptcpServer, &QTcpServer::newConnection, this, &Server::slotNewConnection);
     m_theOnlyClient = nullptr;
     m_bHasClient = false;
+    m_nNextBlockSize = 0;
 }
 
 AVR::Server::~Server()
@@ -75,8 +75,7 @@ AVR::Server::~Server()
     if(m_bHasClient)
         m_theOnlyClient->close();
     m_theOnlyClient->deleteLater();
-    m_ptcpServer->close();
-    delete m_ptcpServer;
+    m_ptcpServer.close();
 }
 
 void AVR::Server::slotNewConnection()   //When new client connected
@@ -84,14 +83,14 @@ void AVR::Server::slotNewConnection()   //When new client connected
     if(m_bHasClient)    //If we already have a client...
     {
         //...kick him away and say him that he cannot connect now
-        auto newClient = m_ptcpServer->nextPendingConnection();
+        auto newClient = m_ptcpServer.nextPendingConnection();
         sendToClient(newClient, "\\mAVR System already has a client. Connection denied.");
         newClient->close();
     }
     else    //If no client, server will accept new connection
     {
         //Save pointer to socket of new client and connect server's slot with it's read and disconnect signals
-        m_theOnlyClient = m_ptcpServer->nextPendingConnection();
+        m_theOnlyClient = m_ptcpServer.nextPendingConnection();
         QObject::connect(m_theOnlyClient, &QTcpSocket::disconnected, this, &AVR::Server::OnClientDisconnected);
         QObject::connect(m_theOnlyClient, &QTcpSocket::readyRead, this, &Server::slotReadClient);
         //Say client that he has been connected successfuly.
@@ -165,22 +164,22 @@ void AVR::Server::AVRWorkIsComplete()   //When AVR finished it's work send clien
         sendToClient(m_theOnlyClient, "\\s");   //Success token
 }
 
-void AVR::Server::OnAVRError(AVRSystem::Exeption code)  //When AVR error occured
+void AVR::Server::OnAVRError(AVRSystem::Error code)  //When AVR error occured
 {
     QString errormsg = "\\mAVR Error: ";    //Message token and message text
 
     switch(code)
     {
-        case AVRSystem::Exeption::UnknownMessage:
+        case AVRSystem::Error::UnknownMessage:
             errormsg += "Unknown type of incoming message.";
             break;
-        case AVRSystem::Exeption::ValueIsLowerThanZero:
+        case AVRSystem::Error::ValueIsLowerThanZero:
             errormsg += "Requested position is lower than 0.";
             break;
-        case AVRSystem::Exeption::TooHighValue:
+        case AVRSystem::Error::TooHighValue:
             errormsg += "Requested position is too large and exceeds the maximum value.";
             break;
-        case AVRSystem::Exeption::AlreadyMoving:
+        case AVRSystem::Error::AlreadyMoving:
             errormsg += "Unexpected behavior. Attempting to move while AVR already moving. Operation canceled.";
             break;
         default:
@@ -212,7 +211,7 @@ void AVR::Server::OnClientDisconnected()    //This slot runs when client has bee
 void AVR::Server::OnMessageReceived(Message::Type type, int ReceivedSteps)
 {
     QString msg = "\\r";    //Message received token
-    switch(int(type))
+    switch(type)
     {
         case Message::Type::MoveForNSteps:  //If MoveForNSteps - say client how much steps AVR will move.
             msg = "";
@@ -226,6 +225,9 @@ void AVR::Server::OnMessageReceived(Message::Type type, int ReceivedSteps)
         case Message::Type::GetPosition:
             msg += "3";
             break;
+
+        default:
+            msg += "0";
     }
 
     if(m_bHasClient)

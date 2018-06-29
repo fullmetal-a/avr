@@ -33,7 +33,7 @@ namespace AVR
 
     Message::Type Message::GetMessageType() const
     {
-        if(m_Type > 0 &&
+        if(m_Type > Message::Type::Unknown &&
            m_Type < Message::Type::TYPE_MAX)
             return m_Type;  //Other types are not supported.
         else
