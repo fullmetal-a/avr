@@ -23,6 +23,7 @@ private:
 
 public:
     explicit MainWindow(QWidget *parent = 0);
+    MainWindow(const QHostAddress& host, int iPort, int chanceToLie, int maxPos, QWidget *parent = 0);
     ~MainWindow();
 
 private slots:

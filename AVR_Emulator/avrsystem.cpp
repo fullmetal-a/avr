@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "avrsystem.h"
-#include <chrono>
 #include <QMessageBox>
 
 namespace AVR
@@ -76,7 +75,7 @@ namespace AVR
                     waitTime = minumumWaitTime;     //than it equals minimum value.
 
                 emit UpdateDisplay(i);  //Sending signal to UI for updating visible position value
-                std::this_thread::sleep_for(std::chrono::milliseconds(waitTime));   //Wait before next iteration
+                QThread::msleep(waitTime);   //Wait before next iteration
             }
 
             m_State = AVR::AVRSystem::State::Idle;  //Work is complete, now system is idling.

@@ -39,3 +39,9 @@ HEADERS += \
 
 FORMS += \
         mainwindow.ui
+
+DESTDIR = ../bin/emulator
+OBJECTS_DIR = ../bin/emulator/.obj
+MOC_DIR = ../bin/emulator/.moc
+RCC_DIR = ../bin/emulator/.rcc
+UI_DIR = ../bin/emulator/.ui

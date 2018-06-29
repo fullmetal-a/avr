@@ -35,3 +35,9 @@ HEADERS += \
 
 FORMS += \
         mainwindow.ui
+
+DESTDIR = ../bin/client
+OBJECTS_DIR = ../bin/client/.obj
+MOC_DIR = ../bin/client/.moc
+RCC_DIR = ../bin/client/.rcc
+UI_DIR = ../bin/client/.ui

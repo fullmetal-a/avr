@@ -3,7 +3,7 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(const QHostAddress& host, int iPort, int chanceToLie, int maxPos, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -12,10 +12,10 @@ MainWindow::MainWindow(QWidget *parent) :
     qRegisterMetaType<AVR::Message>("AVR::Message");
     qRegisterMetaType<AVR::Message::Type>("Message::Type");
     //Creating AVR System unit
-    avr = new AVR::AVRSystem(10, 15000);
+    avr = new AVR::AVRSystem(chanceToLie, maxPos);  //Passing chance to lie and maximum position values
     try
     {
-        server = new AVR::Server(QHostAddress::Any, 28338); //Trying to create and host AVR server entity
+        server = new AVR::Server(host, iPort); //Trying to create and host AVR server entity
     }
     catch(AVR::Server::Exeption svExeption) //If server init failed
     {
@@ -25,6 +25,13 @@ MainWindow::MainWindow(QWidget *parent) :
             exit(0);
         }
     }
+    QString sHost, sPort;   //String variables for host and port
+    sHost = host.toString();
+    sPort.sprintf("%i", iPort);
+    if(sHost == "0.0.0.0")  //Set hostname to localhost if QHostName returns 0.0.0.0 (Which means "Any host").
+        sHost = "localhost";
+    QString hostInfo = "Host info: " + sHost + ":" + sPort;   //Creating host information sign
+    ui->hostInfo->setText(hostInfo);
     avr->moveToThread(&backgroundThread);   //Moving AVR System to separate thread
 
     //Connecting all slots and events of AVR System and Server

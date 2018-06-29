@@ -1,8 +1,5 @@
 #include "avrserver.h"
 #include <QMessageBox>
-#include <iostream>
-#include <string>
-#include <sstream>
 
 /*
     Server messages for it's client always must contain special token at the begining.
