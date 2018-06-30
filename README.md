@@ -50,7 +50,7 @@ Now just go to directory of your compiled binaries and launch AVR_Emulator.exe a
 This two applications are using the Client-Server principle. AVR Emulator is a server and AVR Testing is a client.  
 Default port of AVR Server is 28338. But you are able to change port and host to any value you wish. Just launch AVR emulator with argument `-port <Your port>` or `-host <Your host>` (or even both). For example: `$ ./AVR_Emulator -port 1234 -host 192.168.0.4`  
 Also AVR Emulator could lie when client asking for it's position (When initialy saying current position to client it never lies). Default chance to lie is 10%. But you are able to change it if you launch emulator with `-ctl <Chance>` argument. For example: `$ ./AVR_Emulator -ctl 50` (It means launch AVR Emulator with 50% chance to lie about it's position. This value must be between 0 and 100.  
-Maximum position of AVR system is 15000 by default. You also can change it by passing launch argument `-maxpos <Value>`. For example: `$ ./AVR_Emulator -maxpos 380000`. This value cannot be lower than 1.  
+Maximum position of AVR system is 15000 by default. You also can change it by passing launch argument `-maxpos <Value>`. For example: `$ ./AVR_Emulator -maxpos 380000`. This value must be between 1 and 100000.  
 The client can connect to the emulator from both the local machine and another computer on the local network (or even the Internet).  
 There is only one client is able to be connected to AVR emulator host due to safety reasons.  
 Main window of AVR Emulator shows value of current position (if it moves you see in real time how position changes). And also state of connection (Client connected or not) and host information.  

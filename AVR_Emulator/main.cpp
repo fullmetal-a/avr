@@ -72,9 +72,9 @@ int main(int argc, char *argv[])
         if (nextIsMaxPos)
         {
             maxPos = item.toInt();    //Saving custom port value
-            if (maxPos < 1)
+            if (maxPos < 1 || maxPos > 100000)
             {
-                QMessageBox::critical(0,"Init Error","Incorrect maximum position has been passed. This value cannot be lower than 1.");
+                QMessageBox::critical(0,"Init Error","Incorrect maximum position has been passed. This value must be between 1 and 100000.");
                 return 0;   //Close application, incorrect maximum position
             }
 
