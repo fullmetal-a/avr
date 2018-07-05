@@ -75,9 +75,9 @@ namespace AVR
 
             //Decreasing wait time
             if(waitTime > minumumWaitTime)
-            waitTime *= timeDecreaseFactor;
+                waitTime *= timeDecreaseFactor;
             else if(waitTime < minumumWaitTime) //If time is lower than minimum value
-            waitTime = minumumWaitTime;     //than it equals minimum value.
+                waitTime = minumumWaitTime;     //than it equals minimum value.
 
             emit UpdateDisplay(i);  //Sending signal to UI for updating visible position value
             QThread::msleep(waitTime);   //Wait before next iteration
