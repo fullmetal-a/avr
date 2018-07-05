@@ -55,14 +55,14 @@ The client can connect to the emulator from both the local machine and another c
 There is only one client is able to be connected to AVR emulator host due to safety reasons.  
 Main window of AVR Emulator shows value of current position (if it moves you see in real time how position changes). And also state of connection (Client connected or not) and host information.  
   
-###To manipulate launched AVR you have to:
+### To manipulate launched AVR you have to:
 
 1. launch client application. 
 2. In "Connection data" tab enter port and host of AVR Emulator's machine if you need. 
 3. In Connection menu click "Connect".
 4. When it's connected your client has been initialized and ready to work. You can go now to "AVR Controls" tab.
 
-###You have to know:
+### You have to know:
 
 1. You are able to move AVR's position for some steps forward or backward. To move forward just enter steps quantity and click Move. For moving backward enter negative value (e.g. -56).
 2. All orders sent to AVR System will be processed. They are all will be queued and safely executed one by one.
