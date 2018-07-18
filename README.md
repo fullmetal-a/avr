@@ -1,6 +1,8 @@
 # AVR Emulator and Testing client project
 
 ## General description
+Just sample project of demonstation Qt features and client\server connection.
+This is implementation of emulator of remote physical controller.
 This project containing two subprojects. Emulator of AVR device and it's client for testing it.  
 Project written in C++ language on Qt framework and uses only Qt libraries.  
 AVR device can be manipulated by client application for moving and receving it's position.  
